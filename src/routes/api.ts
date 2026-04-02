@@ -5,9 +5,6 @@ import crypto from 'crypto';
 
 const router: Router = Router();
 
-// In-memory predetermined OTPs
-const VALID_OTPS = [1234, 5678, 7889, 1209];
-
 // Helper functions for deterministic values based on a string seed
 function getDeterministicNumber(seed: string, min: number, max: number): number {
   const hash = crypto.createHash('sha256').update(seed).digest('hex');
@@ -114,16 +111,9 @@ router.post('/triggerOTP', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Missing required parameters: phoneNumber, dob' });
   }
 
-  // To make OTP deterministic by phone number (optional) but the assignment specifies to generate one.
-  // We will keep it as random to follow standard OTP trigger flow, or we can make it deterministic.
-  // Wait, the assignment says: "generates one of the following predetermined values". 
-  // Let's make it deterministic by phone as well for an absolutely consistent test experience.
-  const otpIdx = getDeterministicNumber(phoneNumber + 'otp', 0, VALID_OTPS.length);
-  const generatedOtp = VALID_OTPS[otpIdx];
-
   return res.json({
     success: true,
-    otp: generatedOtp,
+    otp: "1234",
     message: 'OTP generated successfully'
   });
 });
