@@ -172,4 +172,21 @@ router.post('/loanDetails', (req: Request, res: Response) => {
   });
 });
 
+/**
+ * 4. Data Ingestion API
+ * Receives JSON data and logs it to the console
+ */
+router.post('/receive', (req: Request, res: Response) => {
+  const data = req.body;
+
+  console.log('--- Received JSON Data ---');
+  console.log(JSON.stringify(data, null, 2));
+  console.log('--------------------------');
+
+  return res.json({
+    success: true,
+    message: 'Data received and logged successfully'
+  });
+});
+
 export default router;
