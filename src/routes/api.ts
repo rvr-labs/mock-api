@@ -137,10 +137,38 @@ router.post('/getLoanAccounts', (req: Request, res: Response) => {
 
   const accounts = accountIds.map(id => {
     const fullData = generateLoanData(id);
+    
+    // Generate 12 account-related keys deterministically
+    const accountHolderName = `Customer ${getDeterministicNumber(id + 'name', 1000, 9999)}`;
+    const accountStatus = getDeterministicBoolean(id + 'accStatus', 0.95) ? 'ACTIVE' : 'DORMANT';
+    const accountType = getDeterministicBoolean(id + 'accType', 0.8) ? 'SAVINGS' : 'CURRENT';
+    const baseCurrency = 'INR';
+    const baseBranchCode = `BR-ACC-${getDeterministicNumber(id + 'br', 1, 100)}`;
+    const routingNumber = `RTN-${getDeterministicNumber(id + 'rtn', 100000, 999999)}`;
+    const swiftCode = `SWIFT${getDeterministicNumber(id + 'swift', 100, 999)}INBB`;
+    const kycStatus = getDeterministicBoolean(id + 'kyc', 0.99) ? 'VERIFIED' : 'PENDING';
+    const countryOfResidence = 'IN';
+    const riskCategory = getDeterministicBoolean(id + 'risk', 0.9) ? 'LOW' : 'MEDIUM';
+    const accountTier = getDeterministicNumber(id + 'tier', 1, 10) > 8 ? 'PREMIUM' : 'STANDARD';
+    const daysSinceLogin = getDeterministicNumber(id + 'login', 0, 30);
+    const lastLoginDate = new Date(Date.now() - daysSinceLogin * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     return {
       accountId: fullData.accountId,
       typeOfLoan: fullData.typeOfLoan,
-      tenure: fullData.tenure
+      tenure: fullData.tenure,
+      accountHolderName,
+      accountStatus,
+      accountType,
+      baseCurrency,
+      baseBranchCode,
+      routingNumber,
+      swiftCode,
+      kycStatus,
+      countryOfResidence,
+      riskCategory,
+      accountTier,
+      lastLoginDate
     };
   });
 
